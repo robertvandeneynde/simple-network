@@ -23,6 +23,7 @@ public:
 public slots:
     void onNewConnection();
     void onConnected();
+    void onDisconnected();
 
 private:
     Ui::MainWindow *ui;

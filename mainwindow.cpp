@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
         other = new QTcpSocket();
         connect(other, SIGNAL(connected()), this, SLOT(onConnected()));
         other->connectToHost("127.0.0.1", 8123);
+        connect(other, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     } else {
         std::cout << "I am the server" << std::endl;
         other = nullptr;
@@ -41,9 +42,13 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
 void MainWindow::onNewConnection() {
     std::cout << "A new client is connecting !" << std::endl;
     other = server->nextPendingConnection();
+    connect(other, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 }
 
 void MainWindow::onConnected() {
     std::cout << "I am connected" << std::endl;
 }
 
+void MainWindow::onDisconnected() {
+    std::cout << "The other guy just disconnected" << std::endl;
+}

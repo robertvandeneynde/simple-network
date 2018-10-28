@@ -28,6 +28,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    quint32 currentSize = 0;
 
     int posX = 100, posY = 150;
 

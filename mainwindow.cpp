@@ -46,11 +46,8 @@ void MainWindow::onNewConnection() {
     connect(other, SIGNAL(readyRead()), this, SLOT(onData()));
 
     QByteArray data;
-    data.push_back(42);
-    data.push_back(43);
-    data.push_back(44);
-    data.push_back(45);
-    data.push_back(46);
+    for(int i = 0; i < 100; i++)
+        data.push_back((42 + i) % 100);
     QDataStream out(other);
     out << (quint32) data.length();
     other->write(data);
@@ -69,9 +66,18 @@ void MainWindow::onDisconnected() {
 
 void MainWindow::onData() {
     std::cout << "Some data !" << std::endl;
-    if(other->bytesAvailable() < 5)
+    if(currentSize == 0) {
+        if(other->bytesAvailable() < 4)
+            return;
+
+        QDataStream in(other);
+        in >> currentSize;
+    }
+
+    if(other->bytesAvailable() < currentSize)
         return;
 
-    QByteArray data = other->read(5);
+    QByteArray data = other->read(currentSize);
     std::cout << data.toHex().toStdString() << std::endl;
+    currentSize = 0;
 }

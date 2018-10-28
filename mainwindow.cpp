@@ -43,12 +43,28 @@ void MainWindow::onNewConnection() {
     std::cout << "A new client is connecting !" << std::endl;
     other = server->nextPendingConnection();
     connect(other, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    connect(other, SIGNAL(readyRead()), this, SLOT(onData()));
+
+    QByteArray data;
+    data.push_back(42);
+    QDataStream out(other);
+    out << (quint32) data.length();
+    other->write(data);
+
+    std::cout << "Sending " << data.toHex().toStdString() << std::endl;
 }
 
 void MainWindow::onConnected() {
     std::cout << "I am connected" << std::endl;
+    connect(other, SIGNAL(readyRead()), this, SLOT(onData()));
 }
 
 void MainWindow::onDisconnected() {
     std::cout << "The other guy just disconnected" << std::endl;
+}
+
+void MainWindow::onData() {
+    std::cout << "Some data !" << std::endl;
+    QByteArray data = other->read(1);
+    std::cout << data.toHex().toStdString() << std::endl;
 }

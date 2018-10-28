@@ -23,6 +23,7 @@ public:
 public slots:
     void onNewConnection();
     void onConnected();
+    void onData();
     void onDisconnected();
 
 private:

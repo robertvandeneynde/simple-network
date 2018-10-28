@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent*) {
     QPainter painter(this);
     painter.drawRect(posX, posY, 20, 40);
+    painter.drawText(10, 250, QString("myTurn: ") + (myTurn ? "true" : "false"));
 }
 
 void MainWindow::sendJson(QJsonObject obj) {
@@ -45,6 +46,9 @@ void MainWindow::sendJson(QJsonObject obj) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *ev) {
+    if(! myTurn)
+        return;
+
     int oldX = posX;
     int oldY = posY;
     posX = ev->x();
@@ -58,6 +62,7 @@ void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
     sendJson(move);
     update();
+    myTurn = false;
 }
 
 void MainWindow::onNewConnection() {
@@ -71,11 +76,12 @@ void MainWindow::onNewConnection() {
     posY = 0;
     info["x"] = posX;
     info["y"] = posY;
-    update();
 
     isConfigured = true;
+    myTurn = false;
 
     sendJson(info);
+    update();
 }
 
 void MainWindow::onConnected() {
@@ -112,6 +118,7 @@ void MainWindow::onData() {
         posY = json["y"].toInt();
         update();
         isConfigured = true;
+        myTurn = true;
     } else {
         int oldX = json["oldX"].toInt();
         int oldY = json["oldY"].toInt();
@@ -126,6 +133,7 @@ void MainWindow::onData() {
 
         posX = newX;
         posY = newY;
+        myTurn = true;
         update();
     }
 }

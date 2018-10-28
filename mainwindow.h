@@ -36,6 +36,7 @@ private:
     bool isConfigured = false;
 
     int posX = 100, posY = 150;
+    bool myTurn = false;
 
     QTcpServer* server = nullptr;
     QTcpSocket* other = nullptr;

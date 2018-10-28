@@ -45,7 +45,19 @@ void MainWindow::sendJson(QJsonObject obj) {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *ev) {
+    int oldX = posX;
+    int oldY = posY;
+    posX = ev->x();
+    posY = ev->y();
 
+    QJsonObject move;
+    move["oldX"] = oldX;
+    move["oldY"] = oldY;
+    move["newX"] = posX;
+    move["newY"] = posY;
+
+    sendJson(move);
+    update();
 }
 
 void MainWindow::onNewConnection() {
@@ -101,6 +113,19 @@ void MainWindow::onData() {
         update();
         isConfigured = true;
     } else {
+        int oldX = json["oldX"].toInt();
+        int oldY = json["oldY"].toInt();
+        int newX = json["newX"].toInt();
+        int newY = json["newY"].toInt();
 
+        if(!(posX == oldX && posY == oldY)) {
+            std::cerr << "ERROR" << std::endl;
+            destroy();
+            return;
+        }
+
+        posX = newX;
+        posY = newY;
+        update();
     }
 }

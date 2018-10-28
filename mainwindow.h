@@ -33,6 +33,7 @@ private:
 private:
     Ui::MainWindow *ui;
     quint32 currentSize = 0;
+    bool isConfigured = false;
 
     int posX = 100, posY = 150;
 

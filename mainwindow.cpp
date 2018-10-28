@@ -61,6 +61,8 @@ void MainWindow::onNewConnection() {
     info["y"] = posY;
     update();
 
+    isConfigured = true;
+
     sendJson(info);
 }
 
@@ -93,7 +95,12 @@ void MainWindow::onData() {
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject json = doc.object();
 
-    posX = json["x"].toInt();
-    posY = json["y"].toInt();
-    update();
+    if(! isConfigured) {
+        posX = json["x"].toInt();
+        posY = json["y"].toInt();
+        update();
+        isConfigured = true;
+    } else {
+
+    }
 }

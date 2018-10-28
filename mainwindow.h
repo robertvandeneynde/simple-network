@@ -26,6 +26,10 @@ public slots:
     void onData();
     void onDisconnected();
 
+
+private:
+    void sendJson(QJsonObject obj);
+
 private:
     Ui::MainWindow *ui;
     quint32 currentSize = 0;

@@ -35,6 +35,15 @@ void MainWindow::paintEvent(QPaintEvent*) {
     painter.drawRect(posX, posY, 20, 40);
 }
 
+void MainWindow::sendJson(QJsonObject obj) {
+    QByteArray data = QJsonDocument(obj).toJson();
+    QDataStream out(other);
+    out << (quint32) data.length();
+    other->write(data);
+
+    std::cout << "Sending " << data.toStdString() << std::endl;
+}
+
 void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
 }
@@ -52,12 +61,7 @@ void MainWindow::onNewConnection() {
     info["y"] = posY;
     update();
 
-    QByteArray data = QJsonDocument(info).toJson();
-    QDataStream out(other);
-    out << (quint32) data.length();
-    other->write(data);
-
-    std::cout << "Sending " << data.toStdString() << std::endl;
+    sendJson(info);
 }
 
 void MainWindow::onConnected() {

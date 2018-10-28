@@ -22,6 +22,7 @@ public:
 
 public slots:
     void onNewConnection();
+    void onConnected();
 
 private:
     Ui::MainWindow *ui;
@@ -29,6 +30,7 @@ private:
     int posX = 100, posY = 150;
 
     QTcpServer* server = nullptr;
+    QTcpSocket* other = nullptr;
 };
 
 #endif // MAINWINDOW_H

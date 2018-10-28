@@ -47,6 +47,10 @@ void MainWindow::onNewConnection() {
 
     QByteArray data;
     data.push_back(42);
+    data.push_back(43);
+    data.push_back(44);
+    data.push_back(45);
+    data.push_back(46);
     QDataStream out(other);
     out << (quint32) data.length();
     other->write(data);
@@ -65,6 +69,9 @@ void MainWindow::onDisconnected() {
 
 void MainWindow::onData() {
     std::cout << "Some data !" << std::endl;
-    QByteArray data = other->read(1);
+    if(other->bytesAvailable() < 5)
+        return;
+
+    QByteArray data = other->read(5);
     std::cout << data.toHex().toStdString() << std::endl;
 }

@@ -11,8 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     server = new QTcpServer();
-    server->listen(QHostAddress::Any, 8123);
-    std::cout << "I am the server" << std::endl;
+    if(! server->listen(QHostAddress::Any, 8123)) {
+        std::cout << "I am a client" << std::endl;
+    } else {
+        std::cout << "I am the server" << std::endl;
+    }
+
     connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 }
 

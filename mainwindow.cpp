@@ -45,14 +45,19 @@ void MainWindow::onNewConnection() {
     connect(other, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     connect(other, SIGNAL(readyRead()), this, SLOT(onData()));
 
-    QByteArray data;
-    for(int i = 0; i < 100; i++)
-        data.push_back((42 + i) % 100);
+    QJsonObject info;
+    posX = 0;
+    posY = 0;
+    info["x"] = posX;
+    info["y"] = posY;
+    update();
+
+    QByteArray data = QJsonDocument(info).toJson();
     QDataStream out(other);
     out << (quint32) data.length();
     other->write(data);
 
-    std::cout << "Sending " << data.toHex().toStdString() << std::endl;
+    std::cout << "Sending " << data.toStdString() << std::endl;
 }
 
 void MainWindow::onConnected() {
@@ -78,6 +83,13 @@ void MainWindow::onData() {
         return;
 
     QByteArray data = other->read(currentSize);
-    std::cout << data.toHex().toStdString() << std::endl;
+    std::cout << data.toStdString() << std::endl;
     currentSize = 0;
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject json = doc.object();
+
+    posX = json["x"].toInt();
+    posY = json["y"].toInt();
+    update();
 }

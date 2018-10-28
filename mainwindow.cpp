@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    server = new QTcpServer();
+    server->listen(QHostAddress::Any, 8123);
+    std::cout << "I am the server" << std::endl;
+    connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 }
 
 MainWindow::~MainWindow()
@@ -23,5 +28,9 @@ void MainWindow::paintEvent(QPaintEvent*) {
 
 void MainWindow::mousePressEvent(QMouseEvent *ev) {
 
+}
+
+void MainWindow::onNewConnection() {
+    std::cout << "A new client is connecting !" << std::endl;
 }
 

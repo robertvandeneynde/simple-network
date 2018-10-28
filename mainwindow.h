@@ -20,6 +20,9 @@ public:
     void paintEvent(QPaintEvent* ev) override;
     void mousePressEvent(QMouseEvent* ev) override;
 
+public slots:
+    void onNewConnection();
+
 private:
     Ui::MainWindow *ui;
 
